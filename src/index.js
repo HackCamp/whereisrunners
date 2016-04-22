@@ -36,4 +36,17 @@ $( document ).ready(function() {
     )
     $("#runner" + n + " .number").html("0");
   }
+  $.ajax({
+    url: "http://reg.picard.jp/map.php?where=groupbypos",
+    dataType: 'jsonp',
+    jsonpCallback: 'updatenumbers',
+    success: function(data){console.log(data);},
+    error: function(jqXHR, textStatus, errorThrown){
+      alert(textStatus+": "+errorThrown);
+    },
+    beforeSend: function(xhr) {
+      var credentials = $.base64.encode("ppc:hackcamp");
+      xhr.setRequestHeader("Authorization", "Basic " + credentials);
+    },
+  });
 });
