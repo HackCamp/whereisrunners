@@ -34,5 +34,6 @@ $( document ).ready(function() {
       <Runner rid={n}/>,
       document.getElementById('runner' + n)
     )
+    $("#runner" + n + " .number").html("0");
   }
 });
