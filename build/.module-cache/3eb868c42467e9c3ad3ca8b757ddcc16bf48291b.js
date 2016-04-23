@@ -51,11 +51,11 @@ var loadData = function(){
     jsonpCallback: 'updatenumbers',
     success: function(data){
       console.log('success!')
-      setTimeout(loadData,30 * 1000); // 30 seconds
+      setTimeout(loadData,30 * 1000)
     },
     error: function(jqXHR, textStatus, errorThrown){
       console.log(textStatus+": "+errorThrown);
-      setTimeout(loadData,30 * 1000); // 30 seconds
+      setTimeout(loadData,30 * 1000)
     },
     beforeSend: function(xhr) {
       var credentials = $.base64.encode("ppc:hackcamp");

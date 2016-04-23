@@ -26,51 +26,31 @@ var Runner = React.createClass({displayName: "Runner",
     return (
     React.createElement("div", {style: divstyle, className: "runner"}, 
       React.createElement("img", {className: "runnerimg", src: "runner.gif"}), 
-      React.createElement("div", {className: "count"}, this.props.count)
+      React.createElement("div", {className: "count"}, this.state.count)
     )
   )
   }
 });
-var updatenumbers = function(data){
-  console.log(data);
-  $.each(data, function(idx, row){
-    console.log(row.device)
-    if (row.device.startsWith("AS")){
-      var did = parseInt(row.device.substr(2,2))
-      ReactDOM.render(
-        React.createElement(Runner, {rid: did, count: row.count}),
-        document.getElementById('runner' + did)
-      )
-    }
-  });
-}
-var loadData = function(){
+$( document ).ready(function() {
+  console.log( "ready!" );
+  for (var n = 1; n < 12; ++ n){
+    $('#runners').append('<div id="runner' + n +'"/>')
+    ReactDOM.render(
+      React.createElement(Runner, {rid: n}),
+      document.getElementById('runner' + n)
+    )
+  }
   $.ajax({
     url: "http://reg.picard.jp/map.php?where=groupbypos",
     dataType: 'jsonp',
     jsonpCallback: 'updatenumbers',
-    success: function(data){
-      console.log('success!')
-      setTimeout(loadData,30 * 1000); // 30 seconds
-    },
+    success: function(data){console.log(data);},
     error: function(jqXHR, textStatus, errorThrown){
-      console.log(textStatus+": "+errorThrown);
-      setTimeout(loadData,30 * 1000); // 30 seconds
+      alert(textStatus+": "+errorThrown);
     },
     beforeSend: function(xhr) {
       var credentials = $.base64.encode("ppc:hackcamp");
       xhr.setRequestHeader("Authorization", "Basic " + credentials);
     },
   });
-};
-$( document ).ready(function() {
-  console.log( "ready!" );
-  for (var n = 1; n < 12; ++ n){
-    $('#runners').append('<div id="runner' + n +'"/>')
-    ReactDOM.render(
-      React.createElement(Runner, {rid: n, count: "0"}),
-      document.getElementById('runner' + n)
-    )
-  }
-  loadData();
 });

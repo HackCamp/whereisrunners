@@ -44,25 +44,6 @@ var updatenumbers = function(data){
     }
   });
 }
-var loadData = function(){
-  $.ajax({
-    url: "http://reg.picard.jp/map.php?where=groupbypos",
-    dataType: 'jsonp',
-    jsonpCallback: 'updatenumbers',
-    success: function(data){
-      console.log('success!')
-      setTimeout(loadData,30 * 1000); // 30 seconds
-    },
-    error: function(jqXHR, textStatus, errorThrown){
-      console.log(textStatus+": "+errorThrown);
-      setTimeout(loadData,30 * 1000); // 30 seconds
-    },
-    beforeSend: function(xhr) {
-      var credentials = $.base64.encode("ppc:hackcamp");
-      xhr.setRequestHeader("Authorization", "Basic " + credentials);
-    },
-  });
-};
 $( document ).ready(function() {
   console.log( "ready!" );
   for (var n = 1; n < 12; ++ n){
@@ -72,5 +53,19 @@ $( document ).ready(function() {
       document.getElementById('runner' + n)
     )
   }
-  loadData();
+  $.ajax({
+    url: "http://reg.picard.jp/map.php?where=groupbypos",
+    dataType: 'jsonp',
+    jsonpCallback: 'updatenumbers',
+    success: function(data){
+      console.log('success!')
+    },
+    error: function(jqXHR, textStatus, errorThrown){
+      console.log(textStatus+": "+errorThrown);
+    },
+    beforeSend: function(xhr) {
+      var credentials = $.base64.encode("ppc:hackcamp");
+      xhr.setRequestHeader("Authorization", "Basic " + credentials);
+    },
+  });
 });

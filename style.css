@@ -1,7 +1,7 @@
 body{margin:0px;}
 .runnerimg{width:40px;float:right;}
 .runner{width:130px;}
-.runner .number{
+.runner .count{
   width:130px;
   height:40px;
   background-color: blue;

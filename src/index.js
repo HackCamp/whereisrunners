@@ -12,6 +12,11 @@ var poslist = {
   11:["494px","519px"],
 }
 var Runner = React.createClass({
+  getInitialState: function() {
+    return {
+      count: 0
+    };
+  },
   render: function() {
     var divstyle= {
       position:"absolute",
@@ -21,32 +26,51 @@ var Runner = React.createClass({
     return (
     <div style={divstyle} className="runner">
       <img className="runnerimg" src="runner.gif" />
-      <div className="number"/>
+      <div className="count">{this.props.count}</div>
     </div>
   )
   }
 });
-$( document ).ready(function() {
-  console.log( "ready!" );
-  for (var n = 1; n < 12; ++ n){
-    $('#runners').append('<div id="runner' + n +'"/>')
-    ReactDOM.render(
-      <Runner rid={n}/>,
-      document.getElementById('runner' + n)
-    )
-    $("#runner" + n + " .number").html("0");
-  }
+var updatenumbers = function(data){
+  console.log(data);
+  $.each(data, function(idx, row){
+    console.log(row.device)
+    if (row.device.startsWith("AS")){
+      var did = parseInt(row.device.substr(2,2))
+      ReactDOM.render(
+        <Runner rid={did} count={row.count}/>,
+        document.getElementById('runner' + did)
+      )
+    }
+  });
+}
+var loadData = function(){
   $.ajax({
     url: "http://reg.picard.jp/map.php?where=groupbypos",
     dataType: 'jsonp',
     jsonpCallback: 'updatenumbers',
-    success: function(data){console.log(data);},
+    success: function(data){
+      console.log('success!')
+      setTimeout(loadData,30 * 1000); // 30 seconds
+    },
     error: function(jqXHR, textStatus, errorThrown){
-      alert(textStatus+": "+errorThrown);
+      console.log(textStatus+": "+errorThrown);
+      setTimeout(loadData,30 * 1000); // 30 seconds
     },
     beforeSend: function(xhr) {
       var credentials = $.base64.encode("ppc:hackcamp");
       xhr.setRequestHeader("Authorization", "Basic " + credentials);
     },
   });
+};
+$( document ).ready(function() {
+  console.log( "ready!" );
+  for (var n = 1; n < 12; ++ n){
+    $('#runners').append('<div id="runner' + n +'"/>')
+    ReactDOM.render(
+      <Runner rid={n} count="0"/>,
+      document.getElementById('runner' + n)
+    )
+  }
+  loadData();
 });
