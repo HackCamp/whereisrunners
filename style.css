@@ -13,3 +13,25 @@ body{margin:0px;}
   font-size: 1.7em;
   text-align: right;
 }
+#logo{
+  position: absolute;
+  left:220px;
+  top:0px;
+}
+#description{
+  position: absolute;
+  left:220px;
+  top:100px;
+}
+#staffs .staffid {
+  float:left;
+  width:300px;
+}
+#items .itemid {
+  float:left;
+  width:300px;
+}
+.place {
+  float:left;
+  width:100px;
+}
