@@ -23,12 +23,13 @@ var Item = React.createClass({
   }
 });
 var updateItems = function(data){
-  console.log(data)
   item = data[0]
+  console.log(item)
   ReactDOM.render(
     <Item itemid={item.no} place={item.device} lastdatetime={item.lastdatetime}/>,
     document.getElementById(item.no)
   )
+  setTimeout(searchNextItem, 1000);
 }
 var updateStaffs = function(data){
   staff = data[0]
@@ -100,10 +101,22 @@ var updateCards = function(data){
     }
   });
   setTimeout(searchNextStaff, 1000);
+  setTimeout(searchNextItem, 1000);
   loadItems();
 }
+var searchNextItem = function(){
+  console.log("search next item pos:" + currentItemIdx)
+  var count = $('#items').children().length
+  var cardid = $('#items').children()[currentItemIdx].id;
+  var url = "http://reg.picard.jp/map.php?where=no&no=" + cardid;
+  currentItemIdx++;
+  if (currentItemIdx > count){
+    currentItemIdx=0;
+  }
+  ajaxcall(url, 'updateItems')
+}
 var searchNextStaff = function(){
-  console.log("search next pos:" + currentStaffIdx)
+  console.log("search next staff pos:" + currentStaffIdx)
   var count = $('#staffs').children().length
   var cardid = $('#staffs').children()[currentStaffIdx].id;
   var url = "http://reg.picard.jp/map.php?where=no&no=" + cardid;
