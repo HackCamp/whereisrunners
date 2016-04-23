@@ -24,7 +24,7 @@ var Runner = React.createClass({displayName: "Runner",
       top: poslist[this.props.rid][1]
     }
     return (
-    React.createElement("div", {style: divstyle, className: "runner"}, 
+    React.createElement("div", {key: this.props.rid, style: divstyle, className: "runner"}, 
       React.createElement("img", {className: "runnerimg", src: "runner.gif"}), 
       React.createElement("div", {className: "count"}, this.props.count)
     )
