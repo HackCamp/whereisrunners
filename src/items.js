@@ -66,7 +66,8 @@ var updateItems = function(data){
     <Item itemid={item.no} place={item.device} time={item.lastdatetime}/>,
     document.getElementById(item.no)
   )
-}var updateStaffs = function(data){
+}
+var updateStaffs = function(data){
   console.log(data)
   staff = data[0]
   ReactDOM.render(
