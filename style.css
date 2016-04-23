@@ -25,11 +25,11 @@ body{margin:0px;}
 }
 #staffs .staffid {
   float:left;
-  width:300px;
+  width:500px;
 }
 #items .itemid {
   float:left;
-  width:300px;
+  width:500px;
 }
 .place {
   float:left;
@@ -37,4 +37,11 @@ body{margin:0px;}
 }
 #contents{
   padding:20px;
+}
+.card {
+  clear:both;
+}
+
+h2 {
+  clear:both;
 }

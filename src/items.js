@@ -59,16 +59,40 @@ var Item = React.createClass({
   )
   }
 });
-var updateStaffs = function(data){
+var updateItems = function(data){
   console.log(data)
-  var data = {"no":"\u30b9\u30bf\u30c3\u30d5\uff13","lastdatetime":"2016-04-11 08:24:28","device":"\u30c6\u30b9\u30c8"}
+  item = data[0]
   ReactDOM.render(
-    <Staff staffid={data.no} place="" time={data.lastdatetime}/>,
-    document.getElementById(data.no)
+    <Item itemid={item.no} place={item.device} time={item.lastdatetime}/>,
+    document.getElementById(item.no)
   )
+}var updateStaffs = function(data){
   console.log(data)
-
+  staff = data[0]
+  ReactDOM.render(
+    <Staff staffid={staff.no} place={staff.device} time={staff.lastdatetime}/>,
+    document.getElementById(staff.no)
+  )
 }
+var loadAllItems = function(){
+  $.ajax({
+    url: 'http://reg.picard.jp/map.php?where=all',
+    dataType: 'jsonp',
+    jsonpCallback: 'updateCards',
+    success: function(data){
+      console.log('success!')
+      //setTimeout(loadData,30 * 1000); // 30 seconds
+    },
+    error: function(jqXHR, textStatus, errorThrown){
+      console.log(textStatus+": "+errorThrown);
+      //setTimeout(loadData(cardid),30 * 1000); // 30 seconds
+    },
+    beforeSend: function(xhr) {
+      var credentials = $.base64.encode("ppc:hackcamp");
+      xhr.setRequestHeader("Authorization", "Basic " + credentials);
+    },
+  });
+};
 var ajaxcall = function(url, callback){
   console.log(url)
   $.ajax({
@@ -90,29 +114,41 @@ var ajaxcall = function(url, callback){
     },
   });
 }
+var loadItems = function(){
+  $("#items").children().each(function(idx,dom){
+    var cardid = $(dom).first().attr('id')
+    var url = "http://reg.picard.jp/map.php?where=no&no=" + cardid;
+    ajaxcall(url, 'updateItems')
+  });
+};
 var loadStaffs = function(){
   $("#staffs").children().each(function(idx,dom){
     var cardid = $(dom).first().attr('id')
-    var url = "http://reg.picard.jp/map.php?no=" + cardid;
-    ajaxcall(url, updateStaffs)
+    var url = "http://reg.picard.jp/map.php?where=no&no=" + cardid;
+    ajaxcall(url, 'updateStaffs')
   });
 };
-$( document ).ready(function() {
-  console.log( "ready!" );
-  $.each(staffs, function(idx, data){
-    $('#staffs').append('<div id="staff' + idx + '"/>')
-    ReactDOM.render(
-      <Staff staffid={data} place="A01" lastdatetime="2016-04-11 08:24:28"/>,
-      document.getElementById('staff' + idx)
-    )
-  });
-  $.each(items, function(idx, data){
-    $('#items').append('<div id="item' + idx + '"/>')
-    ReactDOM.render(
-      <Item itemid={data} place="A01" lastdatetime="2016-04-11 08:24:28"/>,
-      document.getElementById('item' + idx)
-    )
+var updateCards = function(data){
+  $.each(data, function(idx, card){
+    if (card.no.startsWith("#")){
+      $('#staffs').append('<div id="' + card.no + '" class="card"/>')
+      ReactDOM.render(
+        <Staff staffid={card.no} place="" lastdatetime=""/>,
+        document.getElementById(card.no)
+      )
+    }
+    if (card.no.startsWith("*")){
+      $('#items').append('<div id="' + card.no + '" class="card"/>')
+      ReactDOM.render(
+        <Item itemid={card.no} place="" lastdatetime=""/>,
+        document.getElementById(card.no)
+      )
+    }
   });
   loadStaffs();
   loadItems();
+}
+$( document ).ready(function() {
+  console.log( "ready!" );
+  loadAllItems();
 });
